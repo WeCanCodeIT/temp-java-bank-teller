@@ -11,42 +11,37 @@ import static org.junit.Assert.assertTrue;
 import java.math.BigDecimal;
 import java.util.Collection;
 
-import org.junit.Before;
 import org.junit.Test;
 
 public class BankTest {
 
-	private static final String ACCOUNT_TYPE = "foo";
-
-	private static final String ACCOUNT_NUMBER = "12345";
-	
-	private Bank underTest;
-
-	private BankAccount account;
-
-	@Before
-	public void setup() {
-		//arrange
-		underTest = new Bank();
-		
-		account = new BankAccount(ACCOUNT_NUMBER, ACCOUNT_TYPE, ZERO);
-	}
-	
 	@Test
 	public void shouldAddAccount() {
+		
+		//arrange
+		Bank underTest = new Bank();
+		
+		BankAccount account = new BankAccount("12345", "foo", ZERO);
+		
 		// act
 		underTest.add(account);
 
 		// assert
-		BankAccount retrieved = underTest.findAccount(ACCOUNT_NUMBER);
+		BankAccount retrieved = underTest.findAccount("12345");
 		assertThat(retrieved, is(account));
 	}
 
 	@Test
 	public void shouldBeAbleToAddMultipleAccounts() {
+
+		//arrange
+		Bank underTest = new Bank();
+		
+		BankAccount account = new BankAccount("12345", "foo", ZERO);
+		
 		// arrange
 		String anotherAccountNumber = "34567";
-		BankAccount anotherAccount = new BankAccount(anotherAccountNumber, ACCOUNT_TYPE, ZERO);
+		BankAccount anotherAccount = new BankAccount(anotherAccountNumber, "foo", ZERO);
 
 		// act
 		underTest.add(account);
@@ -66,23 +61,33 @@ public class BankTest {
 
 	@Test
 	public void shouldCloseAccount() {
+
+		//arrange
+		Bank underTest = new Bank();
+		
+		BankAccount account = new BankAccount("12345", "foo", ZERO);
+		
 		// arrange
 		underTest.add(account);
 		
 		// act
-		underTest.close(ACCOUNT_NUMBER);
+		underTest.close("12345");
 		
 		// assert
-		BankAccount found = underTest.findAccount(ACCOUNT_NUMBER);
+		BankAccount found = underTest.findAccount("12345");
 		assertThat(found, is(nullValue()));
 	}
 	
 	@Test
 	public void shouldWithdrawFromAccount() {
-		BankAccount account = new BankAccount(ACCOUNT_NUMBER, ACCOUNT_TYPE, "86.00");
+		
+		//arrange
+		Bank underTest = new Bank();
+		
+		BankAccount account = new BankAccount("12345", "foo", "86.00");
 		underTest.add(account);
 		
-		underTest.withdraw(ACCOUNT_NUMBER, "44.00");
+		underTest.withdraw("12345", "44.00");
 		
 		assertThat(account.getBalance(), is(new BigDecimal("42.00")));
 	}
